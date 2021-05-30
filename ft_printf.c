@@ -1,6 +1,15 @@
 #include "libft/libft.h"
+#include "printf.h"
 #include <stdarg.h>
 
+
+typedef struct s_flags
+{
+	int pres;
+	int zero;
+	int left;
+	int right;
+}				t_flag;
 void hex(long quotient)
 {
    char hexadecimalnum[100];
@@ -71,42 +80,66 @@ void out_u(long i)
 	}
 }
 
+void check_conv(const char *p,va_list argptr,t_flag flag,int t)
+{
+	char *out;
+	if(*p == 'd')
+	{
+			t = va_arg(argptr,int);
+			out = ft_itoa(t);
+			write(1,out,ft_strlen(out));
+	}
+	if(*p == 's')
+	{
+		out = va_arg(argptr,char *);
+		write(1,out,ft_strlen(out));
+	}
+	if(*p == 'c')
+	{
+		ft_putchar_fd(va_arg(argptr,int ),1);
+	}
+	if(*p == 'u')
+	{
+		out_u(va_arg(argptr,long));
+	}
+	if(*p == 'X')
+	{
+		hex(va_arg(argptr,long));
+	}
+	if(*p == 'x')
+	{
+		hex_min(va_arg(argptr,long));
+	}
+}
+
 int ft_printf(const char *p,...)
 {
 	va_list argptr;
 	int t;
+	t_flag flag;
 	va_start (argptr, p);
+	int i = 0;
+	size_t count = 0;
+	char *len;
 	char *out;
 	while(*p)
 	{
 		if(*p == '%')
 		{
-			if(*++p == 'd')
+			if(*++p == '-')
 			{
-				t = va_arg(argptr,int);
-				out = ft_itoa(t);
-				write(1,out,ft_strlen(out));
+				p++;
+				while(ft_isdigit(p[count]))
+					count++;
+				len = ft_substr(p,0,count);
+				i = ft_atoi(len);
+				out = malloc(sizeof(char) * 10);
+				ft_memset(out,' ',i);
+				while( )
 			}
-			if(*p == 's')
+			else
 			{
-				out = va_arg(argptr,char *);
-				write(1,out,ft_strlen(out));
-			}
-			if(*p == 'c')
-			{
-				ft_putchar_fd(va_arg(argptr,int ),1);
-			}
-			if(*p == 'u')
-			{
-				out_u(va_arg(argptr,long));
-			}
-			if(*p == 'X')
-			{
-				hex(va_arg(argptr,long));
-			}
-			if(*p == 'x')
-			{
-				hex_min(va_arg(argptr,long));
+				check_conv(p,argptr,flag,t);
 			}
 		}
 		else
@@ -119,6 +152,6 @@ int ft_printf(const char *p,...)
 }
 int main()
 {
-	ft_printf("%x ",2147483647);
-	printf("%.0x" ,2147483647);
+	ft_printf("%-105d final\n",2);
+	// printf("%-10d finals\n",2);
 }
