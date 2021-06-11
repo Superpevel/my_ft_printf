@@ -1,9 +1,10 @@
+
 int hex_length(long quotient)
 {
-   char hexadecimalnum[100];
-   long remainder;
-   int j = 0;
-   int i = 0;
+    char hexadecimalnum[100];
+    long remainder;
+    int j = 0;
+    int i = 0;
     while (quotient != 0)
     {
         remainder = quotient % 16;

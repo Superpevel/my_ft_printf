@@ -15,8 +15,9 @@ typedef struct s_params
 {
 	int before_dot;
 	int after_dot;
-
+	int minus_number;
 }				t_params;
+
 int out_u_length(long i);
 void hex(long quotient);
 int hex_length(long quotient);
@@ -28,4 +29,8 @@ int is_conv(char p);
 void check_conv(const char *p,va_list argptr,int t);
 int is_conv(char p);
 t_flag check_star_left(t_flag flag,t_params params);
+int handle_int(const char *p,char *out,t_flag flag,t_params params);
+t_params get_params(const char *p,t_params params,t_flag flag,va_list argptr);
+t_params init_params(t_params params);
+
 #endif
