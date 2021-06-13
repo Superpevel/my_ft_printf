@@ -14,7 +14,6 @@ t_flag init_flag(t_flag flag)
 t_flag flag_handler(t_flag flag,const char *p)
 {
 	int i;
-	int t;
 	i = 0;
 	while(!is_conv(p[i]))
 	{
@@ -42,11 +41,11 @@ t_flag flag_handler(t_flag flag,const char *p)
 }
 
 
-t_flag check_star_left(t_flag flag,t_params params)
+t_flag check_star_left(t_flag flag,t_params *params)
 {
-	if(params.before_dot<0)
+	if(params->before_dot<0)
 	{
-		params.before_dot *= -1;
+		params->before_dot *= -1;
 		flag.left = 1;
 	}
 	else

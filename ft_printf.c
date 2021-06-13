@@ -4,7 +4,7 @@
 
 
 
-t_params get_params(const char *p,t_params params,t_flag flag,va_list argptr)
+t_params get_params(const char *p,t_params params,t_flag flag,va_list *argptr)
 {
 	int t;
 
@@ -26,7 +26,7 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list argptr)
 	}
 	else if(flag.left_handle == 1)
 	{
-		t =va_arg(argptr,int);
+		t =va_arg(*argptr,int);
 
 		params.before_dot= t;
 		while (!(ft_isdigit(p[count]) || is_conv(p[count])))
@@ -36,7 +36,7 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list argptr)
 	count1 = count;
 	if(flag.right_handle == 1)
 	{
-		params.after_dot= va_arg(argptr,int);
+		params.after_dot= va_arg(*argptr,int);
 	}
 	if(flag.pres == 1 && flag.pres_num == 1)
 	{
@@ -51,65 +51,167 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list argptr)
 	return(params);
 }
 
-void handle_int(const char *p,char *out,t_flag flag,size_t length,t_params params)
+void handle_int(const char *p,int t,t_flag flag,size_t length,t_params params)
 {
+	char *out = ft_itoa(t);
+	char **tmp;
 	int count = 0;
 	int width = ft_strlen(out);
-	if(flag.left == 1)
+	int zeros = 0;
+	int spaces = 0;
+	int minus = 0;
+	if(t < 0)
+	{
+		minus = 1;
+		t *= -1;
+		free(out);
+		out  = ft_itoa(t); 
+	}
+	zeros = params.after_dot - width;
+	if(zeros >0)
+		spaces = params.before_dot - zeros - width;
+	else
+		spaces = params.before_dot - width;
+	if(flag.left == 1 && flag.pres == 0)
+	{
 		write(1,out,width);
-	while(width < params.before_dot && (count <(params.before_dot -params.after_dot)))
-	{
-		ft_putchar_fd(' ',1);
-		width++;
-		count++;
+		while(params.before_dot-- -width)
+		{
+			ft_putchar_fd(' ',1);
+		}
 	}
-	while (width < params.after_dot)
+	if(flag.left == 1 && flag.pres == 1 && minus == 0)
 	{
-		ft_putchar_fd('0',1);
-		width++;
-	}
-	if(flag.right == 1)
+		while (zeros > 0)
+		{
+			ft_putchar_fd('0',1);
+			zeros--;
+		}
 		write(1,out,ft_strlen(out));
+		while (spaces > 0)
+		{
+			ft_putchar_fd(' ',1);
+			spaces--;
+		}
+	}
+	if(flag.left == 1 && flag.pres == 1 && minus == 1)
+	{
+		spaces--;
+		zeros++;
+		ft_putchar_fd('-',1);
+		while (zeros > 0)
+		{
+			ft_putchar_fd('0',1);
+			zeros--;
+		}
+		write(1,out,ft_strlen(out));
+		while (spaces > 0)
+		{
+			ft_putchar_fd(' ',1);
+			spaces--;
+		}
+	}
+	if(flag.right == 1 && flag.pres == 0)
+	{
+		while(params.before_dot-- -width > 0)
+		{
+			ft_putchar_fd(' ',1);
+		}
+		write(1,out,ft_strlen(out));
+	}
+	if(flag.right == 1 && flag.pres == 1 && minus == 0)
+	{
+		while (spaces > 0)
+		{
+			ft_putchar_fd(' ',1);
+			spaces--;
+		}
+		while (zeros > 0)
+		{
+			ft_putchar_fd('0',1);
+			zeros--;
+		}
+		write(1,out,ft_strlen(out));
+	}
+	if(flag.right == 1 && flag.pres == 1 && minus == 1)
+	{
+		spaces--;
+		zeros++;
+		while (spaces > 0)
+		{
+			ft_putchar_fd(' ',1);
+			spaces--;
+		}
+		ft_putchar_fd('-',1);
+		while (zeros > 0)
+		{
+			ft_putchar_fd('0',1);
+			zeros--;
+		}
+		write(1,out,ft_strlen(out));
+	}
 }
 
-int conv_length(const char *p,va_list argptr,int t,t_flag flag)
+int print_char(char c, t_flag flag,t_params params)
+{
+	int words;
+	int count = 0;
+	words = 0;
+	if(flag.left == 1 )
+	{
+		ft_putchar_fd(c,1);
+		params.before_dot  = params.before_dot *-1;
+		while(params.before_dot-- -1)
+		{
+			ft_putchar_fd(' ',1);
+		}
+	}
+	if(flag.right == 1)
+	{
+		while (params.before_dot--  -1 > 0)
+		{
+			ft_putchar_fd(' ',1);
+		}
+		ft_putchar_fd(c,1);
+	}
+	return(1);
+}
+
+int conv_length(const char *p,va_list *argptr,int t,t_flag flag)
 {
 	t_params params;
 
 	params = get_params(p,params,flag,argptr);
-	flag = check_star_left(flag,params);
-	// printf("haha %d \n",params.before_dot);
+	flag = check_star_left(flag,&params);
 	int i = 0;
 	char *out;
 	while(!(is_conv(p[i])))
 		i++;
 	if(p[i] == 'd')
 	{
-			t = va_arg(argptr,int);
-			out = ft_itoa(t);
-			handle_int(p,out,flag,ft_strlen(out),params);
-			free(out);
+			handle_int(p,va_arg(*argptr,int),flag,ft_strlen(out),params);
 	}
 	if(p[i] == 's')
 	{
-		out = va_arg(argptr,char *);
+		out = va_arg(*argptr,char *);
 		return(ft_strlen(out));
 	}
 	if(p[i] == 'c')
 	{
+		print_char(va_arg(*argptr,int),flag,params);
 		return(1);
 	}
 	if(p[i] == 'u')
 	{
-		out_u_length(va_arg(argptr,long));
+		out_u_length(va_arg(*argptr,long));
 	}
 	if(p[i] == 'X')
 	{
-		return(hex_length(va_arg(argptr,long)));
+		return(hex_length(va_arg(*argptr,long)));
 	}
 	if(p[i] == 'x' || p[i] == 'X')
 	{
-		return(hex_length(va_arg(argptr,long)));
+		return(hex_length(va_arg(*argptr,long)));
 	}
 	return(0);
 }
@@ -122,20 +224,6 @@ int until_conv(const char *p)
 	while(!is_conv(p[i]))
 		i++;
 	return(i);
-}
-
-int flag_out_put(t_flag flag,const char *p,va_list argptr,int i)
-{
-	int t;
-	if(flag.left == 0 && flag.left_handle == 0 && flag.pres == 0 && flag.pres_num == 0 && flag.right == 0 && flag.right_handle == 0)
-	{
-		check_conv(p,argptr,t);
-	}
-	else
-	{
-		conv_length(p,argptr,i,flag);
-	}
-	return(0);
 }
 
 int ft_printf(const char *p,...)
@@ -153,7 +241,7 @@ int ft_printf(const char *p,...)
 		{
 			flag = init_flag(flag);
 			flag = flag_handler(flag,p++);
-			conv_length(p,argptr,t,flag);
+			conv_length(p,&argptr,t,flag);
 			i = until_conv(p);
 			p = p+i;
 		}
@@ -166,6 +254,6 @@ int ft_printf(const char *p,...)
 
 int main()
 {
-	ft_printf("%3.2d\n",2,2);
-	printf("%3.2d\n",2);
+	ft_printf("%10.11d\n",20);
+	printf("%10.11d\n",20);
 }
