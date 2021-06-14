@@ -17,12 +17,17 @@ t_flag flag_handler(t_flag flag,const char *p)
 	i = 0;
 	while(!is_conv(p[i]))
 	{
+		if(p[i] == '0' && flag.right == 0 && flag.left == 0)
+			flag.zero = 1;
 		if(p[i] == '*' && flag.pres == 0)
 				flag.left_handle = 1;
 		if(p[i] == '*' && flag.pres == 1)
 				flag.right_handle = 1;
 		if(p[i] == '-' && flag.pres == 0 && flag.left_handle == 0)
+		{
+			flag.zero = 0;
 			flag.left = 1;
+		}
 		if(flag.left_handle == 0 && flag.left == 0 && flag.pres == 0 && ft_isdigit(p[i]))
 			flag.right = 1;
 		if(p[i] == '.')
@@ -45,10 +50,16 @@ t_flag check_star_left(t_flag flag,t_params *params)
 {
 	if(params->before_dot<0)
 	{
+		flag.zero = 0;
 		params->before_dot *= -1;
 		flag.left = 1;
+		flag.right = 0;
 	}
-	else
+	else if(flag.left == 0)
 		flag.right = 1;
+	if(flag.left == 1)
+		flag.right = 0;
+	if(flag.pres == 1)
+		flag.zero = 0;
 	return(flag);
 }

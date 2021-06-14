@@ -29,4 +29,6 @@ void check_conv(const char *p,va_list argptr,int t);
 int is_conv(char p);
 t_flag check_star_left(t_flag flag,t_params *params);
 int ft_printf(const char *p,...);
+int handle_int(int t,t_flag flag,t_params params);
+int print_char(char c, t_flag flag,t_params params);
 #endif

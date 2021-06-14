@@ -11,7 +11,9 @@ SRCS =  ft_printf.c \
 		print_u.c \
 		put_hex.c \
 		u_length.c \
-		
+		int_handle.c\
+		char_handle.c\
+
 SURPL_O = 	ft_printf.o \
 		hex_length.o \
 		flag_start.o \
@@ -19,6 +21,8 @@ SURPL_O = 	ft_printf.o \
 		print_u.o \
 		put_hex.o \
 		u_length.o\
+		int_handle.o\
+		char_handle.o\
 CC = gcc
 
 FLAGS = -c -Wall -Wextra -Werror
@@ -37,7 +41,7 @@ all : $(NAME)
 
 clean :
 	$(MAKE) clean -C ./libft
-	rm -rf $(SURPL_O) 
+	rm -rf $(SURPL_O)
 	rm -rf $(OBJS)
 
 fclean : clean
