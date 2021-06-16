@@ -31,4 +31,10 @@ t_flag check_star_left(t_flag flag,t_params *params);
 int ft_printf(const char *p,...);
 int handle_int(int t,t_flag flag,t_params params);
 int print_char(char c, t_flag flag,t_params params);
+int handle_s(char *out,t_params params ,t_flag flag);
+int handle_per(t_flag flag,t_params params);
+int handex_X(t_flag flag,t_params params,long num);
+int x_zero(t_flag flag,t_params params,long num);
+int x_handle(t_flag flag,t_params params,long num);
+int u_handle(t_flag flag,t_params params,long num);
 #endif

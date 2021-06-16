@@ -5,15 +5,30 @@
 int check_zero(int t,t_flag flag,t_params params)
 {
 	int words = 0;
+	char *out = ft_itoa(t);
 	if(t == 0 && (flag.pres_num == 0 || params.after_dot == 0) && flag.pres == 1)
 	{
+		if(flag.left == 1 && params.after_dot < 0)
+		{
+			write(1,out,ft_strlen(out));
+			words += ft_strlen(out);
+		}
+		if(params.after_dot < 0 )
+			params.before_dot = params.before_dot - ft_strlen(out);
 		while (params.before_dot-- > 0)
 		{
 			ft_putchar_fd(' ',1);
 			words++;
 		}
+		if(flag.right == 1 && params.after_dot < 0)
+		{
+			write(1,out,ft_strlen(out));
+			words += ft_strlen(out);
+		}
+		free(out);
 		return(words);
 	}
+	free(out);
 	return(-1);
 }
 
@@ -103,6 +118,11 @@ int handle_int(int t,t_flag flag,t_params params)
 		{
 			words++;
 			ft_putchar_fd(' ',1);
+		}
+		if(minus == 1)
+		{
+			words++;
+			ft_putchar_fd('-',1);
 		}
 		write(1,out,ft_strlen(out));
 		words+= (int)ft_strlen(out);

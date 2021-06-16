@@ -3,11 +3,12 @@
 #include <stdarg.h>
 int put_length(long i ,int count )
 {
-	if(i>=10)
+	while (i>=10)
 	{
-		put_length(i/10,count+1);
+		i = i /10;
+		count++;
 	}
-	else if(i<10)
+	if(i<10)
 	{
 		count++;
 	}
@@ -27,4 +28,5 @@ int out_u_length(long i)
 	{
 		return(put_length(i,count));
 	}
+	return(count);
 }

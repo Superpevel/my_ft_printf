@@ -8,17 +8,26 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list *argptr)
 
 	char *len;
 	int count,count1;
+	int for_left = 0;
 	int i ;
 	count = 0;
 	count1 = 0;
 
 	if(flag.left==1)
+	{
 		count++;
+		for_left++;
+	}
 	if(flag.left_handle == 0 && (flag.left == 1 || flag.right == 1))
 	{
+		if(p[for_left]== '-')
+		{
+			for_left++;
+			count++;
+		}
 		while(ft_isdigit(p[count]))
 			count++;
-		len = ft_substr(p,0,count);
+		len = ft_substr(p,for_left,count);
 		i = ft_atoi(len);
 		params.before_dot = i;
 		free(len);
@@ -52,71 +61,83 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list *argptr)
 	return(params);
 }
 
-
-int handle_s(char *out,t_params params ,t_flag flag)
+int handle_p(t_flag flag,t_params params,void * num1)
 {
+	int spaces;
 	int words = 0;
-	int spaces = 0;
-	int i = 0;
-	
-	if (!out)
-		out = "(null)";
-	int width = ft_strlen(out);
-	if(flag.pres && (params.after_dot == 0 || flag.pres_num == 0))
-			spaces = params.before_dot;
-	if(width < params.after_dot && flag.pres == 1)
+	int zeros;
+	unsigned long num;
+	if(!num1)
+		num = 0;
+	else
+		num = (unsigned )num1;
+	// printf("%lu",num);
+	int len = hex_length(num) + 2;
+	char *prefix = "0x";
+	zeros = x_zero(flag,params,num);
+	if(zeros >= 0)
+		return(zeros);
+	else
+		zeros =0;
+	if(num != 0)
+		words+=len;
+	else
 	{
-		spaces = params.before_dot - width;
+		len = 3;
+		words+=1;
 	}
-	if(flag.pres == 0 && (flag.left == 1 || flag.right == 1))
-		spaces = params.before_dot - width;
-	if(flag.pres == 1 && flag.right == 1 && flag.pres_num == 1)
+	if(flag.zero == 0)
 	{
-		if(width < params.after_dot)
-			spaces = params.before_dot - width;
+		zeros = params.after_dot - len;
+		if(zeros>0)
+			spaces = params.before_dot - zeros - len;
 		else
-			spaces = params.before_dot - params.after_dot;
+			spaces = params.before_dot - len;
 	}
-	if(flag.pres == 1 && flag.left == 1 && flag.pres_num == 1)
+	if(flag.zero == 1)
 	{
-		if(width < params.after_dot)
-			spaces = params.before_dot - width;
-		else
-			spaces = params.before_dot - params.after_dot;
+		spaces = 0;
+		zeros = params.before_dot - len;
 	}
-	if(flag.pres == 1 && flag.pres_num == 0)
-	{
-		spaces = params.before_dot;
-		while (spaces-- > 0)
-			ft_putchar_fd(' ',1);
-		return(params.before_dot);
-	}
-	if (flag.left == 1)
-	{
-		while (out[i] != '\0')
+	if(flag.left == 1)
+		while (zeros-- > 0)
 		{
-			if(flag.pres == 1 && i >= params.after_dot)
-				break;
-			ft_putchar_fd(out[i],1);
+			ft_putchar_fd('0',1);
 			words++;
-			i++;
 		}
+	if(flag.left == 1)
+	{
+		if(num != 0)
+		{
+			ft_putstr_fd(prefix,1);
+			hex_min(num);
+		}
+		else
+			ft_putchar_fd('0',1);
 	}
-	while (spaces > 0)
+	while (spaces-- > 0)
 	{
 		ft_putchar_fd(' ',1);
-		spaces--;
 		words++;
 	}
-	if (flag.right == 1)
-	{
-		while (out[i] != '\0' )
+	if(flag.right == 1)
+		while (zeros-- >0)
 		{
-			if(flag.pres == 1 && i >= params.after_dot)
-				break;
-			ft_putchar_fd(out[i],1);
+			ft_putchar_fd('0',1);
 			words++;
-			i++;
+		}
+	if(flag.right == 1)
+	{
+		if(num != 0)
+		{
+			ft_putstr_fd(prefix,1);
+			hex_min(num);
+		}
+		else
+		{
+			ft_putstr_fd(prefix,1);
+			ft_putchar_fd('0',1);
+			words = 3;
 		}
 	}
 	return(words);
@@ -137,6 +158,7 @@ int conv_length(const char *p,va_list *argptr,int t,t_flag flag)
 	// printf("flags pres %d \n",flag.pres);
 	// printf("flags pres num %d \n",flag.pres_num);
 	// printf("flags zeo %d \n",flag.zero);
+	// printf("params left %d \n",params.before_dot);
 	// printf("\n");
 	int i = 0;
 	char *out;
@@ -157,18 +179,19 @@ int conv_length(const char *p,va_list *argptr,int t,t_flag flag)
 	}
 	if(p[i] == 'u')
 	{
-		out_u_length(va_arg(*argptr,long));
+		return(u_handle(flag,params,va_arg(*argptr,long)));
 	}
 	if(p[i] == 'X')
-	{
-		return(hex_length(va_arg(*argptr,long)));
-	}
-	if(p[i] == 'x' || p[i] == 'X')
-	{
-		return(hex_length(va_arg(*argptr,long)));
-	}
+		return(handex_X(flag,params,va_arg(*argptr,long long)));
+	if(p[i] == 'x')
+		return(x_handle(flag,params,va_arg(*argptr,long long)));
+	if(p[i] == '%')
+		return(handle_per(flag,params));
+	if(p[i] == 'p')
+		return(handle_p(flag,params,va_arg(*argptr,void *)));
 	return(0);
 }
+
 
 int until_conv(const char *p)
 {
@@ -212,8 +235,8 @@ int ft_printf(const char *p,...)
 	int main()
 	{
 		int t;
-		t =ft_printf("%.s ", NULL);
+		t =ft_printf("%p",(void *) -15);
 		printf("my fun %d\n",t);
-		t= printf(" %10.*s ", -1, NULL);
-		printf("origin %d\n",t);
+		t= printf("%p", (void *)-15);
+		printf("orgin %d\n",t);
 	}
