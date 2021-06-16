@@ -52,16 +52,38 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list *argptr)
 	return(params);
 }
 
+
 int handle_s(char *out,t_params params ,t_flag flag)
 {
 	int words = 0;
 	int spaces = 0;
 	int i = 0;
+	
+	if (!out)
+		out = "(null)";
 	int width = ft_strlen(out);
-	if(width > params.after_dot)
+	if(flag.pres && (params.after_dot == 0 || flag.pres_num == 0))
+			spaces = params.before_dot;
+	if(width < params.after_dot && flag.pres == 1)
+	{
 		spaces = params.before_dot - width;
-	else
-		spaces = params.before_dot - params.after_dot;
+	}
+	if(flag.pres == 0 && (flag.left == 1 || flag.right == 1))
+		spaces = params.before_dot - width;
+	if(flag.pres == 1 && flag.right == 1 && flag.pres_num == 1)
+	{
+		if(width < params.after_dot)
+			spaces = params.before_dot - width;
+		else
+			spaces = params.before_dot - params.after_dot;
+	}
+	if(flag.pres == 1 && flag.left == 1 && flag.pres_num == 1)
+	{
+		if(width < params.after_dot)
+			spaces = params.before_dot - width;
+		else
+			spaces = params.before_dot - params.after_dot;
+	}
 	if(flag.pres == 1 && flag.pres_num == 0)
 	{
 		spaces = params.before_dot;
@@ -187,11 +209,11 @@ int ft_printf(const char *p,...)
 	return (count);
 }
 
-int main()
-{
-	int t;
-	t =ft_printf(" %3.0s\n", "123");
-	printf("my fun %d\n",t);
-	t= printf(" %3.0s\n", "123");
-	printf("origin %d\n",t);
-}
+	int main()
+	{
+		int t;
+		t =ft_printf("%.s ", NULL);
+		printf("my fun %d\n",t);
+		t= printf(" %10.*s ", -1, NULL);
+		printf("origin %d\n",t);
+	}
