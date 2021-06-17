@@ -240,11 +240,11 @@ int ft_printf(const char *p,...)
 	return (count);
 }
 
-	int main()
-	{
-		int t;
-		t =ft_printf(" %.*s ", -1, NULL);
-		printf("my fun %d\n",t);
-		t= printf(" %.*s ", -1, NULL);
-		printf("orgin %d\n",t);
-	}
+	// int main()
+	// {
+	// 	int t;
+	// 	t =ft_printf("%s", "0");
+	// 	printf("my fun %d\n",t);
+	// 	t= printf("%s","0");
+	// 	printf("orgin %d\n",t);
+	// }
