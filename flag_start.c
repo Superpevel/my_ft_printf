@@ -69,6 +69,7 @@ t_flag check_star_left(t_flag flag,t_params *params)
 		if(params->before_dot < 0)
 		{
 			flag.left = 1;
+			flag.zero = 0; 
 		}
 		else
 			flag.right = 1;

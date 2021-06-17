@@ -18,6 +18,7 @@ SRCS =  ft_printf.c \
 		handle_X.c\
 		x_handle.c\
 		u_handle.c\
+		itoa_base.c\
 
 SURPL_O = 	ft_printf.o \
 		hex_length.o \
@@ -33,6 +34,7 @@ SURPL_O = 	ft_printf.o \
 		handle_X.o\
 		x_handle.o\
 		u_handle.o\
+		itoa_base.o\
 CC = gcc
 
 FLAGS = -c -Wall -Wextra -Werror

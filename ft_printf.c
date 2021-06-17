@@ -61,19 +61,22 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list *argptr)
 	return(params);
 }
 
-int handle_p(t_flag flag,t_params params,void * num1)
+int handle_p(t_flag flag,t_params params,unsigned long long num)
 {
 	int spaces;
 	int words = 0;
 	int zeros;
-	unsigned long num;
-	if(!num1)
-		num = 0;
-	else
-		num = (unsigned )num1;
-	// printf("%lu",num);
-	int len = hex_length(num) + 2;
+	char *out;
+	int i = 0;
+	out = ft_ull_base(num,16);
+	int len = ft_strlen(out) + 2;
 	char *prefix = "0x";
+	while (out[i] != '\0')
+	{
+		out[i] = ft_tolower(out[i]);
+		i++;
+	}
+	
 	zeros = x_zero(flag,params,num);
 	if(zeros >= 0)
 		return(zeros);
@@ -110,10 +113,14 @@ int handle_p(t_flag flag,t_params params,void * num1)
 		if(num != 0)
 		{
 			ft_putstr_fd(prefix,1);
-			hex_min(num);
+			ft_putstr_fd(out,1);
 		}
 		else
-			ft_putchar_fd('0',1);
+		{
+			ft_putstr_fd(prefix,1);
+			ft_putstr_fd(out,1);
+			words+=2;
+		}
 	}
 	while (spaces-- > 0)
 	{
@@ -131,7 +138,7 @@ int handle_p(t_flag flag,t_params params,void * num1)
 		if(num != 0)
 		{
 			ft_putstr_fd(prefix,1);
-			hex_min(num);
+			ft_putstr_fd(out,1);
 		}
 		else
 		{
@@ -140,6 +147,7 @@ int handle_p(t_flag flag,t_params params,void * num1)
 			words = 3;
 		}
 	}
+	free(out);
 	return(words);
 }
 
@@ -164,7 +172,7 @@ int conv_length(const char *p,va_list *argptr,int t,t_flag flag)
 	char *out;
 	while(!(is_conv(p[i])))
 		i++;
-	if(p[i] == 'd')
+	if(p[i] == 'd' || p[i] == 'i')
 	{
 		return(handle_int(va_arg(*argptr,int),flag,params));
 	}
@@ -188,7 +196,7 @@ int conv_length(const char *p,va_list *argptr,int t,t_flag flag)
 	if(p[i] == '%')
 		return(handle_per(flag,params));
 	if(p[i] == 'p')
-		return(handle_p(flag,params,va_arg(*argptr,void *)));
+		return(handle_p(flag,params,va_arg(*argptr, unsigned long long)));
 	return(0);
 }
 
@@ -235,8 +243,8 @@ int ft_printf(const char *p,...)
 	int main()
 	{
 		int t;
-		t =ft_printf("%p",(void *) -15);
+		t =ft_printf(" %.*s ", -1, NULL);
 		printf("my fun %d\n",t);
-		t= printf("%p", (void *)-15);
+		t= printf(" %.*s ", -1, NULL);
 		printf("orgin %d\n",t);
 	}

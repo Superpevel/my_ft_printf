@@ -44,7 +44,13 @@ int handle_int(int t,t_flag flag,t_params params)
 	int zeros = 0;
 	int spaces = 0;
 	int minus = 0;
-	if(t < 0)
+	if(t == -2147483648)
+	{
+		free(out);
+		out = ft_strdup("2147483648");
+		minus = 1;
+	}
+	else if(t < 0)
 	{
 		minus = 1;
 		t *= -1;

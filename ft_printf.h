@@ -37,4 +37,5 @@ int handex_X(t_flag flag,t_params params,long num);
 int x_zero(t_flag flag,t_params params,long num);
 int x_handle(t_flag flag,t_params params,long num);
 int u_handle(t_flag flag,t_params params,long num);
+char *ft_ull_base(unsigned long long ull, int base);
 #endif

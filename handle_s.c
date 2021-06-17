@@ -41,6 +41,8 @@ int handle_s(char *out,t_params params ,t_flag flag)
 	}
 	if((flag.left == 1 || flag.right == 1) && flag.pres == 1 && width > params.after_dot)
 			spaces = params.before_dot - params.after_dot;
+	if(params.after_dot < 0)
+		spaces = 0;
 	if (flag.left == 1)
 	{
 		while (out[i] != '\0')
@@ -60,6 +62,7 @@ int handle_s(char *out,t_params params ,t_flag flag)
 	}
 	if (flag.right == 1)
 	{
+		i = 0;
 		while (out[i] != '\0' )
 		{
 			if(flag.pres == 1 && i >= params.after_dot)
