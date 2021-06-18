@@ -47,6 +47,11 @@ int handex_X(t_flag flag,t_params params,long num)
 	{
 		spaces = 0;
 		zeros = params.before_dot - len;
+		if(params.after_dot == 0 && flag.pres_num == 1)
+		{
+			spaces = zeros;
+			zeros = 0;
+		}	
 	}
 	if(flag.left == 1)
 		while (zeros-- > 0)

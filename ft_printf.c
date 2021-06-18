@@ -61,6 +61,23 @@ t_params get_params(const char *p,t_params params,t_flag flag,va_list *argptr)
 	return(params);
 }
 
+int p_zero(t_flag flag,t_params params,long num)
+{
+	int spaces;
+	int words = 0;
+	if(((flag.pres == 1 && flag.pres_num == 0) || (params.after_dot == 0 && flag.pres_num == 1)) && num == 0)
+	{
+		spaces = params.before_dot;
+		while (spaces--)
+		{
+			ft_putchar_fd(' ',1);
+			words++;
+		}
+		return(words);
+	}
+	return(-1);
+}
+
 int handle_p(t_flag flag,t_params params,unsigned long long num)
 {
 	int spaces;
@@ -77,7 +94,7 @@ int handle_p(t_flag flag,t_params params,unsigned long long num)
 		i++;
 	}
 	
-	zeros = x_zero(flag,params,num);
+	zeros = p_zero(flag,params,num);
 	if(zeros >= 0)
 		return(zeros);
 	else
@@ -101,6 +118,11 @@ int handle_p(t_flag flag,t_params params,unsigned long long num)
 	{
 		spaces = 0;
 		zeros = params.before_dot - len;
+		if(params.after_dot == 0 && flag.pres_num == 1)
+		{
+			spaces = zeros;
+			zeros = 0;
+		}	
 	}
 	if(flag.left == 1)
 		while (zeros-- > 0)
@@ -144,7 +166,7 @@ int handle_p(t_flag flag,t_params params,unsigned long long num)
 		{
 			ft_putstr_fd(prefix,1);
 			ft_putchar_fd('0',1);
-			words = 3;
+			words += 2;
 		}
 	}
 	free(out);
@@ -243,8 +265,8 @@ int ft_printf(const char *p,...)
 	// int main()
 	// {
 	// 	int t;
-	// 	t =ft_printf("%s", "0");
+	// 	t =ft_printf("%0*.*d",4,0,-97);
 	// 	printf("my fun %d\n",t);
-	// 	t= printf("%s","0");
+	// 	t= printf("%0*.*d",4,0,-97);
 	// 	printf("orgin %d\n",t);
 	// }

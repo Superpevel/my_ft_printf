@@ -78,7 +78,7 @@ t_flag check_star_left(t_flag flag,t_params *params)
 	{
 		flag.pres_num = 1;
 	}
-	if(flag.pres == 1)
+	if(flag.pres == 1 && params->after_dot>0)
 		flag.zero = 0;
 	return(flag);
 }

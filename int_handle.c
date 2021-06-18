@@ -179,17 +179,28 @@ int handle_int(int t,t_flag flag,t_params params)
 		write(1,out,ft_strlen(out));
 		words+= (int)ft_strlen(out);
 	}
-
 	if(flag.zero == 1)
 	{
+		spaces = 0;
 		if(minus == 0)
 			zeros = params.before_dot - width;
 		else
 		{
 			zeros = params.before_dot - width;
-			ft_putchar_fd('-',1);
 			words++;
 		}
+		if(params.after_dot == 0 && flag.pres_num == 1)
+		{
+			zeros = 0;
+			spaces = params.before_dot - width;
+		}
+		while (spaces-- >0)
+		{
+			ft_putchar_fd(' ',1);
+			words++;
+		}
+		if(minus != 0)
+			ft_putchar_fd('-',1);
 		while (zeros-- >0)
 		{
 			ft_putchar_fd('0',1);
