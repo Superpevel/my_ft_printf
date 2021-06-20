@@ -1,27 +1,27 @@
-#include "libft/libft.h"
 #include "ft_printf.h"
-int handle_per(t_flag flag,t_params params)
+
+int	handle_per(t_flag flag)
 {
-	int spaces = 0;
-	int zeros = 0;
-	int words = 1;
-	if(flag.zero == 0)
-		spaces = params.before_dot - 1;
+	int	words;
+
+	words = 1;
+	if (flag.zero == 0)
+		flag.spaces = flag.before_dot - 1;
 	else
-		zeros = params.before_dot - 1;
+		flag.zeros = flag.before_dot - 1;
 	if (flag.left == 1)
-		ft_putchar_fd('%',1);
-	while (spaces-- > 0)
+		ft_putchar_fd('%', 1);
+	while (flag.spaces-- > 0)
 	{
-		ft_putchar_fd(' ',1);
+		ft_putchar_fd(' ', 1);
 		words++;
 	}
-	while (zeros-- > 0)
+	while (flag.zeros-- > 0)
 	{
-		ft_putchar_fd('0',1);
+		ft_putchar_fd('0', 1);
 		words++;
 	}
 	if (flag.right == 1)
-		ft_putchar_fd('%',1);
-	return(words);
+		ft_putchar_fd('%', 1);
+	return (words);
 }
