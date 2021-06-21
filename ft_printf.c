@@ -24,7 +24,7 @@ int	conv_length(const char *p, va_list *argptr, t_flag flag)
 	if (p[i] == '%')
 		return (handle_per(flag));
 	if (p[i] == 'p')
-		return (handle_p(flag, va_arg(*argptr, unsigned long long)));
+		return (handle_p(flag, va_arg(*argptr, void *)));
 	return (0);
 }
 
@@ -73,12 +73,3 @@ int	ft_printf(const char *p, ...)
 	}
 	return (count);
 }
-
-// int main()
-// {
-// 	int t;
-// 	t =ft_printf(" %-3.2x %10.42x ", 1, -1);
-// 	printf("my fun %d\n",t);
-// 	t= printf(" %-3.2x %10.42x ", 1, -1);
-// 	printf("orgin %d\n",t);
-// }

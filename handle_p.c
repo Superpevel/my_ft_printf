@@ -52,20 +52,13 @@ int	print_p(t_flag flag, int words, unsigned long long num, char *out)
 	return (words);
 }
 
-int	handle_p(t_flag flag, unsigned long long num)
+int	return_p(unsigned long long num, char *out, t_flag flag)
 {
-	int		words;
-	char	*out;
-	int		len;
+	int	len ;
+	int	words;
 
 	words = 0;
-	out = to_lower_str(ft_ull_base(num, 16));
 	len = ft_strlen(out) + 2;
-	flag.zeros = p_zero(flag, num);
-	if (flag.zeros >= 0)
-		return (flag.zeros);
-	else
-		flag.zeros = 0;
 	if (num != 0)
 		words += len;
 	else
@@ -75,6 +68,34 @@ int	handle_p(t_flag flag, unsigned long long num)
 	}
 	flag_params(len, &flag);
 	words = print_p(flag, words, num, out);
+	return (words);
+}
+
+int	handle_p(t_flag flag, void *pointer)
+{
+	int					words;
+	char				*out;
+	unsigned long long	num;
+
+	words = 0;
+	num = -1;
+	if (!pointer)
+	{
+		out = ft_strdup("");
+		if (flag.pres == 0)
+			num = 0;
+	}
+	else
+	{
+		num = (unsigned long long)pointer;
+		out = to_lower_str(ft_ull_base(num, 16));
+	}
+	flag.zeros = p_zero(flag, num);
+	if (flag.zeros >= 0)
+		return (flag.zeros);
+	else
+		flag.zeros = 0;
+	words = return_p(num, out, flag);
 	free(out);
 	return (words);
 }

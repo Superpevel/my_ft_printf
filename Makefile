@@ -43,7 +43,7 @@ INCLUDES = -I./includes
 
 OBJS = $(SRCS:.c=.o)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) ft_printf.h
 	$(MAKE) bonus -C ./libft
 	cp libft/libft.a $(NAME)
 	$(CC) $(FLAGS) $(INCLUDES) $(SRCS)

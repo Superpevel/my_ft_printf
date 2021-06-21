@@ -40,7 +40,7 @@ int		u_handle(t_flag flag, unsigned int num);
 char	*ft_ull_base(unsigned long long ull, int base);
 t_flag	get_params(const char *p, t_flag flag, va_list *argptr);
 char	*ft_u_itoa(unsigned int n);
-int		handle_p(t_flag flag, unsigned long long num);
+int		handle_p(t_flag flag, void *pointer);
 int		ft_write(int s, int words, int what);
 int		check_zero(int t, t_flag flag);
 int		pls_work(t_flag flag, char *out);
